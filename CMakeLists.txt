@@ -10,13 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 # initialize the Pico SDK
 pico_sdk_init()
 
-include_directories("${PICO_SDK_PATH}/src/common/pico_stdlib/include")
-include_directories("${PICO_SDK_PATH}/src/common/pico_base/include")
-include_directories("${PICO_SDK_PATH}/src/common/pico_time/include")
-include_directories("${PICO_SDK_PATH}/src/rp2_common/pico_stdio/include")
-include_directories("${PICO_SDK_PATH}/src/rp2_common/hardware_gpio/include")
-include_directories("${PICO_SDK_PATH}/src/rp2_common/hardware_uart/include")
-
 add_executable(pico_bf main.cpp)
 # Add pico_stdlib library which aggregates commonly used features
 target_link_libraries(pico_bf pico_stdlib)
