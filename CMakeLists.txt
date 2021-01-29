@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.12)
-set(PICO_SDK_PATH "/home/ubuntu/src/pico-sdk")
 
 # initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()
