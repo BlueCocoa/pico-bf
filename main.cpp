@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include <cstring>
 #include <string>
 #include <sstream>
 #include <array>
@@ -60,7 +61,7 @@ const std::map<char, brainfuck_op> bf_op_map {
 /// brainfuck virtual machine status
 struct brainfuck_vm_status {
     /// virtual infinity length tape
-    std::map<int, int> tape;
+    std::map<int, char> tape;
     /// current cell of the tape
     int tape_ptr = 0;
 
@@ -250,20 +251,60 @@ std::string getline(const char * prompt) {
     }
 }
 
-int main() {
-    stdio_init_all();
+int run_bf(const char * run) {
     const char * prompt = ">>>";
     // the brainfuck vm
     brainfuck_vm_status status;
+    if (run != nullptr) {
+        printf("example:\n%s\n\n", run);
+        for (size_t i = 0; i < strlen(run); i++) {
+            // interpret
+            run_vm(status, run[i]);
+        }
+        printf("\n");
+        return 1;
+    }
     while (true) {
         std::string input = getline(prompt);
         printf("\n");
+        if (input == "reset") {
+            return 1;
+        } else if (input == "example") {
+            return 2;
+        }
         for (size_t i = 0; i < input.length(); i++) {
             // interpret
             run_vm(status, input[i]);
-	    }
+        }
         printf("\n");
     }
     return 0;
+}
+
+int main() {
+    stdio_init_all();
+    while (true) {
+        int ret = run_bf(nullptr);
+        if (ret == 1) {
+            printf("\nPicoBf by Cocoa v0.0.1\ntype reset to clear vm states\n\n");
+        } else if (ret == 2) {
+            run_bf("+++++ +++[- >++++ ++++< ]>+++ +++++ +++++ +++.< +++++ [->++ +++<] >.---"\
+"---.< +++[- >+++< ]>+++ .<+++ +++[- >---- --<]> ----- ----- --.<+ +++[-"\
+">++++ <]>+. <++++ [->++ ++<]> +++++ .++++ ++.++ ++.<+ +++++ ++[-> -----"\
+"---<] >---- ----- ----- .<+++ +++++ +++++ [->++ +++++ +++++ +<]>+ +++++"\
+"+++++ +++++ +++++ ++++. <++++ +++++ [->-- ----- --<]> ----- ----- -----"\
+"--.<+ +++++ +[->+ +++++ +<]>+ +++++ ++.<+ +++++ [->++ ++++< ]>+++ ++.<+"\
+"+++++ +++[- >---- ----- <]>-- ----- ----- ----- .<+++ +[->+ +++<] >++.<"\
+"+++++ +++[- >++++ ++++< ]>+++ +++++ +++++ +++.< +++++ ++++[ ->--- -----"\
+"-<]>- ----- ----- ----- -.<++ +++++ [->++ +++++ <]>++ +++++ +.<++ ++++["\
+"->+++ +++<] >++++ +.<++ +++++ ++[-> ----- ----< ]>--- ----- ----- ----."\
+"<++++ [->++ ++<]> ++.<+ +++++ ++[-> +++++ +++<] >++++ +++++ +++++ ++.<+"\
+"+++++ +++[- >---- ----- <]>-- ----- ----- ----- .<+++ ++++[ ->+++ ++++<"\
+"]>+++ +++++ .<+++ +++[- >++++ ++<]> +++++ .<+++ +++++ +[->- ----- ---<]"\
+">---- ----- ----- ---.< ++++[ ->+++ +<]>+ +.<++ +++++ ++[-> +++++ ++++<"\
+"]>+++ +++++ +++.< +++++ ++[-> ----- --<]> --.<+ +++++ +[->- ----- -<]>-"\
+"----- ----. <");
+        }
+    }
 }
 
