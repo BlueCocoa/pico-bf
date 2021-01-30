@@ -9,6 +9,7 @@
 #include <stack>
 #include <variant>
 #include <vector>
+#include "peko.h"
 
 /// brainfuck virtual machine tape length
 #define BRAINFUCK_VM_TAPE_LEN 30000
@@ -251,12 +252,14 @@ std::string getline(const char * prompt) {
     }
 }
 
-int run_bf(const char * run) {
+int run_bf(const char * run, bool print_run) {
     const char * prompt = ">>>";
     // the brainfuck vm
     brainfuck_vm_status status;
     if (run != nullptr) {
-        printf("example:\n%s\n\n", run);
+        if (print_run) {
+            printf("%s\n\n", run);
+        }
         for (size_t i = 0; i < strlen(run); i++) {
             // interpret
             run_vm(status, run[i]);
@@ -271,6 +274,8 @@ int run_bf(const char * run) {
             return 1;
         } else if (input == "example") {
             return 2;
+        } else if (input == "peko") {
+            return 3;
         }
         for (size_t i = 0; i < input.length(); i++) {
             // interpret
@@ -284,9 +289,9 @@ int run_bf(const char * run) {
 int main() {
     stdio_init_all();
     while (true) {
-        int ret = run_bf(nullptr);
+        int ret = run_bf(nullptr, false);
         if (ret == 1) {
-            printf("\nPicoBf by Cocoa v0.0.1\ntype reset to clear vm states\n\n");
+            printf("\nPicoBf by Cocoa v0.0.1\n  type reset to clear vm states\n  type example to see an example\n  type peko to peko!\n\n");
         } else if (ret == 2) {
             run_bf("+++++ +++[- >++++ ++++< ]>+++ +++++ +++++ +++.< +++++ [->++ +++<] >.---"\
 "---.< +++[- >+++< ]>+++ .<+++ +++[- >---- --<]> ----- ----- --.<+ +++[-"\
@@ -303,7 +308,9 @@ int main() {
 "]>+++ +++++ .<+++ +++[- >++++ ++<]> +++++ .<+++ +++++ +[->- ----- ---<]"\
 ">---- ----- ----- ---.< ++++[ ->+++ +<]>+ +.<++ +++++ ++[-> +++++ ++++<"\
 "]>+++ +++++ +++.< +++++ ++[-> ----- --<]> --.<+ +++++ +[->- ----- -<]>-"\
-"----- ----. <");
+"----- ----. <", true);
+        } else if (ret == 3) {
+            run_bf(peko, false);
         }
     }
 }
