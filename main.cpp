@@ -243,7 +243,8 @@ std::string getline(const char * prompt) {
                 printf("\r%s %s", prompt, s.c_str());
             }
             input.clear();
-            input.str(s);
+            input.str("");
+            input << s;
             continue;
         } else {
             input << c;
